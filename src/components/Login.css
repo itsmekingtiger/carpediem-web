@@ -1,0 +1,10 @@
+body{
+    background-color:Gainsboro;
+}
+
+#centre-pannel{
+    align-self: center;
+    justify-content: center;
+    justify-self: center;
+    align-content: center;
+}

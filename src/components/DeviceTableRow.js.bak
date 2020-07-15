@@ -1,0 +1,57 @@
+
+import React, { useState } from 'react'
+import { Input, Button, Table } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css';
+import axios from 'axios'
+
+
+function DeviceTableRow({ profDeviceInfo }) {
+    const [deviceInfo, setdeviceInfo] = useState({
+        room: profDeviceInfo.room,
+        nickname: profDeviceInfo.nickname,
+        type: profDeviceInfo.type,
+        mac: profDeviceInfo.mac,
+        ip: profDeviceInfo.ip,
+    })
+
+    const { room, nickname, type, mac, ip } = deviceInfo;
+
+
+    const onChangeDeviceInfo = (e) => {
+        const { val, key } = e.target;
+        setdeviceInfo({
+            ...deviceInfo,
+            [key]: val
+        })
+    }
+
+    const onClickWink = (e) => {
+        const port = 55001;
+        axios.defaults.baseURL = window.location.protocol + '//' + window.location.hostname + ':' + port;
+        axios.post(`/device/${mac}/wink`)
+        console.log(mac);
+    }
+
+
+    return (
+        <Table.Row>
+            <Table.Cell>
+                <Input defaultValue={room} onChange={onChangeDeviceInfo}>
+                </Input>
+            </Table.Cell>
+            <Table.Cell>
+                <Input defaultValue={nickname} onChange={onChangeDeviceInfo}>
+                </Input>
+            </Table.Cell>
+            <Table.Cell>{type}</Table.Cell>
+            <Table.Cell>{mac}</Table.Cell>
+            <Table.Cell>{ip}</Table.Cell>
+            <Table.Cell>
+                <Button color='teal' onClick={onClickWink}>Wink</Button>
+            </Table.Cell>
+        </Table.Row>
+
+    )
+}
+
+export default DeviceTableRow;
