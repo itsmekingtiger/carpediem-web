@@ -17,7 +17,7 @@
         "styled-components": "^5.1.1"
     },
     "scripts": {
-        "start": "craco start",
+        "start": "export PORT=8080 && react-scripts start",
         "build": "craco build",
         "test": "craco test",
         "eject": "craco eject"

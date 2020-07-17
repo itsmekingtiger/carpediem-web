@@ -4,11 +4,13 @@ import { Input, Button, Grid, Header, Segment, Form, Container, Table, Checkbox 
 import 'semantic-ui-css/semantic.min.css';
 import './Login.css'
 import DeviceTableRow from './DeviceTableRow.js';
+import SensorTableRow from './SensorTableRow.js';
 import axios from 'axios';
 
 
 function Dashboard() {
     const [deviceRows, setdeviceRows] = useState([])
+    const [sensorRows, setSensorRows] = useState([])
     const [enablePush, setEnablePush] = useState(false)
     const [homename, setHomename] = useState('')
 
@@ -20,6 +22,14 @@ function Dashboard() {
                 console.log(res.data);
 
                 setdeviceRows(res.data)
+            });
+
+        // 장치 상태 가져오기
+        axios.get('/sensors/*')
+            .then((res) => {
+                console.log(res.data);
+
+                setSensorRows(res.data)
             });
 
         // 홈 이름 가져오기
@@ -46,7 +56,7 @@ function Dashboard() {
 
 
 
-    const onChanged = (e) => {
+    const onChangedDevice = (e) => {
         var { name, className, value } = e.target
         const key = name.split('@')
         setdeviceRows(
@@ -70,14 +80,37 @@ function Dashboard() {
         )
     }
 
+    const onChangedSensor = (e) => {
+        var { name, value } = e.target
 
-    const onClickDiscovery = () => {
+        setSensorRows(
+            sensorRows.map((sens) => {
+                if (sens.uid === name) {
+                    sens = {
+                        ...sens,
+                        'room': value,
+                    }
+                    return sens
+                }
+                return sens
+            })
+        )
+    }
+
+
+    const onClickDeviceDiscovery = () => {
         axios.post('/devices/discovery')
     }
-    const onClickSave = () => {
+    const onClickDeviceSave = () => {
         console.log(deviceRows);
 
         axios.put('/devices', deviceRows)
+    }
+
+    const onClickSensorSave = () => {
+        console.log(sensorRows);
+
+        axios.put('/sensors', sensorRows)
     }
 
     const onChangeHome = (e) => {
@@ -106,6 +139,7 @@ function Dashboard() {
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
             <Grid.Column style={{ maxWidth: 900 }}>
                 <Segment>
+                    {/* 장치 */}
                     <Container style={{ marginBottom: 100 }}>
                         <Header as='h2' textAlign='left'>장치</Header>
                         <Table selectable compact>
@@ -124,7 +158,7 @@ function Dashboard() {
                                 {deviceRows.map(dev => (
                                     <DeviceTableRow
                                         profDeviceInfo={dev}
-                                        onChanged={onChanged}
+                                        onChanged={onChangedDevice}
                                         key={dev.mac} />
                                 ))}
 
@@ -132,11 +166,39 @@ function Dashboard() {
                         </Table>
 
                         <Container textAlign='left'>
-                            <Button onClick={onClickDiscovery} color='teal'>검색</Button>
-                            <Button onClick={onClickSave} color='teal'>저장</Button>
+                            <Button onClick={onClickDeviceDiscovery} color='teal'>검색</Button>
+                            <Button onClick={onClickDeviceSave} color='teal'>저장</Button>
                         </Container>
                     </Container>
 
+
+                    {/* 센서 */}
+                    <Container style={{ marginBottom: 100 }}>
+                        <Header as='h2' textAlign='left'>센서</Header>
+                        <Table selectable compact>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell textAlign='center'>위치</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>UID</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {sensorRows.map(sens => (
+                                    <SensorTableRow
+                                        profDeviceInfo={sens}
+                                        onChanged={onChangedSensor}
+                                        key={sens.uid} />
+                                ))}
+                            </Table.Body>
+                        </Table>
+
+                        <Container textAlign='left'>
+                            <Button onClick={onClickSensorSave} color='teal'>저장</Button>
+                        </Container>
+                    </Container>
+
+
+                    {/* 설정 */}
                     <Container textAlign='left'>
                         {/* <Container style={{ marginTop: 100, marginBottom: 100 }}> */}
 
