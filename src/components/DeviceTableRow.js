@@ -15,7 +15,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
     //     label: profDeviceInfo.lable,
     // })
 
-    const { room, nickname, type, mac, ip, label, config } = profDeviceInfo;
+    const { location, nickname, type, mac, ip, label, config } = profDeviceInfo;
 
 
     const onClickWink = (e) => {
@@ -33,7 +33,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
         <Fragment>
             <Table.Row>
                 <Table.Cell textAlign='center'>
-                    {room}
+                    {location.room}
                 </Table.Cell>
                 <Table.Cell textAlign='center'>
                     {nickname}
@@ -47,14 +47,35 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                 <Table.Cell textAlign='center' >
                     <Modal
                         trigger={<Button>설정</Button>}>
-                        <Modal.Header>{room} - {nickname}({ip})의 설정</Modal.Header>
+                        <Modal.Header>{location.room} - {nickname}({ip})의 설정</Modal.Header>
                         <Modal.Content image>
                             <Modal.Description>
                                 <Header>장치위치</Header>
                                 <Input
-                                    defaultValue={room}
-                                    name={`room@` + mac}
+                                    defaultValue={location.room}
+                                    name={`location.room@` + mac}
                                     placeholder='위치'
+                                    onChange={onChanged}
+                                />
+                                <Header>locationID</Header>
+                                <Input
+                                    defaultValue={location.locationId}
+                                    name={`location.locationId@` + mac}
+                                    placeholder='location id'
+                                    onChange={onChanged}
+                                />
+                                <Header>Y좌표</Header>
+                                <Input
+                                    defaultValue={location.y}
+                                    name={`location.y@` + mac}
+                                    placeholder='x좌표'
+                                    onChange={onChanged}
+                                />
+                                <Header>X좌표</Header>
+                                <Input
+                                    defaultValue={location.x}
+                                    name={`location.x@` + mac}
+                                    placeholder='y좌표'
                                     onChange={onChanged}
                                 />
                                 <Header>장치 이름</Header>

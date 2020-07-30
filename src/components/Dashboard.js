@@ -19,7 +19,7 @@ function Dashboard() {
         // 장치 상태 가져오기
         axios.get('/devices/*')
             .then((res) => {
-                // console.log(res.data);
+                console.log(res.data);
 
                 setdeviceRows(res.data)
             })
