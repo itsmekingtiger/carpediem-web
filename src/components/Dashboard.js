@@ -62,6 +62,7 @@ function Dashboard() {
     const onChangedDevice = (e) => {
         var { name, className, value } = e.target
         const key = name.split('@')
+        const nested = key[0].split('.')
         setdeviceRows(
             deviceRows.map((dev) => {
                 if (dev.mac === key[1]) {
@@ -71,11 +72,31 @@ function Dashboard() {
                             [key[0]]: value.split(',')
                         }
                     } else {
-                        dev = {
-                            ...dev,
-                            [key[0]]: value
-                        }
+                        // 로케이션 처리
+                        console.log("dev", dev["location"]);
+                        if (nested.length === 2) {
+                            switch (nested[1]) {
+                                case "x":
+                                case "y":
+                                    value = Number(value)
+                                    break;
 
+                                default:
+                                    break;
+                            }
+                            dev = {
+                                ...dev,
+                                [nested[0]]: {
+                                    ...dev.location,
+                                    [nested[1]]: value
+                                }
+                            }
+                        } else {
+                            dev = {
+                                ...dev,
+                                [key[0]]: value
+                            }
+                        }
                     }
                 }
                 return dev
@@ -105,9 +126,10 @@ function Dashboard() {
         axios.post('/devices/discovery')
     }
     const onClickDeviceSave = () => {
-        console.log(deviceRows);
+        console.log(JSON.stringify(deviceRows));
 
-        axios.put('/devices', deviceRows)
+
+        axios.put('/devices', JSON.stringify(deviceRows))
     }
 
     const onClickSensorSave = () => {
