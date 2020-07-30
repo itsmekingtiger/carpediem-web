@@ -1,0 +1,15 @@
+[Unit]
+Description=Carpediem Web
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+User=ubuntu
+RestartSec=10s
+ExecStart=/home/ubuntu/.nvm/versions/node/v14.5.0/bin/npm run start
+WorkingDirectory=/usr/local/sbin/carpediem-web
+ExecStartPre=source /home/ubuntu/.profile
+
+[Install]
+WantedBy=multi-user.target

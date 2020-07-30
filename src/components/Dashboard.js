@@ -19,18 +19,21 @@ function Dashboard() {
         // 장치 상태 가져오기
         axios.get('/devices/*')
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
 
                 setdeviceRows(res.data)
-            });
+            })
+            .catch(err => console.log(err.response));
 
         // 장치 상태 가져오기
         axios.get('/sensors/*')
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
 
                 setSensorRows(res.data)
-            });
+            })
+            .catch(err => console.log(err.response));
+
 
         // 홈 이름 가져오기
         axios.get('/home')
