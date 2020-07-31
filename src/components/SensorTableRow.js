@@ -6,7 +6,7 @@ import axios from 'axios'
 
 
 function SensorTableRow({ profDeviceInfo, onChanged }) {
-    const { room: location, uid } = profDeviceInfo;
+    const { location, uid } = profDeviceInfo;
 
 
 

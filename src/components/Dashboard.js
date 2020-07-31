@@ -28,7 +28,7 @@ function Dashboard() {
         // 센서 상태 가져오기
         axios.get('/sensors/*')
             .then((res) => {
-                // console.log(res.data);
+                // console.log("센서가져오기", res.data);
 
                 setSensorRows(res.data)
             })
@@ -108,13 +108,37 @@ function Dashboard() {
         var { name, value } = e.target
         const key = name.split('@')
         const nested = key[0].split('.')
+        console.log(`${key[1]}, ${nested[1]}는 ${value}`);
 
         setSensorRows(
             sensorRows.map((sens) => {
-                if (sens.uid === name[1]) {
-                    sens = {
-                        ...sens,
-                        [key[0]]: value = Number(value)
+                if (sens.uid == key[1]) {
+                    console.log(sens.uid);
+
+                    switch (nested[1]) {
+                        case 'x':
+                        case 'y':
+                            sens = {
+                                ...sens,
+                                [nested[0]]: {
+                                    ...sens.location,
+                                    [nested[1]]: Number(value)
+                                }
+                            }
+                            break;
+
+                        case 'locationId':
+                        case 'room':
+                            sens = {
+                                ...sens,
+                                [nested[0]]: {
+                                    ...sens.location,
+                                    [nested[1]]: value
+                                }
+                            }
+
+                        default:
+                            break;
                     }
                     return sens
                 }
