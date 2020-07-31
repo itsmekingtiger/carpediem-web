@@ -25,7 +25,7 @@ function Dashboard() {
             })
             .catch(err => console.log(err.response));
 
-        // 장치 상태 가져오기
+        // 센서 상태 가져오기
         axios.get('/sensors/*')
             .then((res) => {
                 // console.log(res.data);
@@ -106,13 +106,15 @@ function Dashboard() {
 
     const onChangedSensor = (e) => {
         var { name, value } = e.target
+        const key = name.split('@')
+        const nested = key[0].split('.')
 
         setSensorRows(
             sensorRows.map((sens) => {
-                if (sens.uid === name) {
+                if (sens.uid === name[1]) {
                     sens = {
                         ...sens,
-                        'room': value,
+                        [key[0]]: value = Number(value)
                     }
                     return sens
                 }
@@ -203,7 +205,10 @@ function Dashboard() {
                         <Table selectable compact>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell textAlign='center'>위치</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>room</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>locationId</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>X</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>Y</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>UID</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
