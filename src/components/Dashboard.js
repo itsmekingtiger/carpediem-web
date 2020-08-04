@@ -233,6 +233,7 @@ function Dashboard() {
                                     <Table.HeaderCell textAlign='center'>locationId</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>X</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>Y</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>타입</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>UID</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
