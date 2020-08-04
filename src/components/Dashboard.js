@@ -17,7 +17,7 @@ function Dashboard() {
 
     useEffect(() => {
         // 장치 상태 가져오기
-        axios.get('/devices/*')
+        axios.get('/api/devices/*')
             .then((res) => {
                 console.log(res.data);
 
@@ -26,7 +26,7 @@ function Dashboard() {
             .catch(err => console.log(err.response));
 
         // 센서 상태 가져오기
-        axios.get('/sensors/*')
+        axios.get('/api/sensors/*')
             .then((res) => {
                 // console.log("센서가져오기", res.data);
 
@@ -36,7 +36,7 @@ function Dashboard() {
 
 
         // 홈 이름 가져오기
-        axios.get('/home')
+        axios.get('/api/home')
             .then((res) => {
                 setHomename(res.data.home)
             })
@@ -45,7 +45,7 @@ function Dashboard() {
             })
 
         // 푸쉬 상태 받아오기
-        axios.get('/service/push')
+        axios.get('/api/service/push')
             .then((res) => {
                 setEnablePush(res.data.push)
             })
@@ -149,19 +149,19 @@ function Dashboard() {
 
 
     const onClickDeviceDiscovery = () => {
-        axios.post('/devices/discovery')
+        axios.post('/api/devices/discovery')
     }
     const onClickDeviceSave = () => {
         console.log(JSON.stringify(deviceRows));
 
 
-        axios.put('/devices', JSON.stringify(deviceRows))
+        axios.put('/api/devices', JSON.stringify(deviceRows))
     }
 
     const onClickSensorSave = () => {
         console.log(sensorRows);
 
-        axios.put('/sensors', sensorRows)
+        axios.put('/api/sensors', sensorRows)
     }
 
     const onChangeHome = (e) => {
@@ -173,7 +173,7 @@ function Dashboard() {
         setEnablePush(!enablePush)
     }
     const onClickConfig = () => {
-        axios.put('/service/set', { push: enablePush, home: homename })
+        axios.put('/api/service/set', { push: enablePush, home: homename })
             .then((res) => {
                 console.log(res.data);
 
