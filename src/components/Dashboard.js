@@ -181,7 +181,9 @@ function Dashboard() {
                     console.error(res.data);
                 }
             })
-
+    }
+    const onClickShutdown = () => {
+        axios.post('/api/service/shutdown', { push: enablePush, home: homename })
     }
 
 
@@ -272,6 +274,7 @@ function Dashboard() {
                             label='Push to CarpeDiem' />
                         <p />
                         <Button onClick={onClickConfig} color='teal'>저장</Button>
+                        <Button onClick={onClickShutdown} color='red'>서비스 종료</Button>
                     </Container>
                 </Segment>
             </Grid.Column>
