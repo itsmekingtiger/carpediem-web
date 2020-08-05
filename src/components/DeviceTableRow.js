@@ -19,7 +19,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
 
 
     const onClickWink = (e) => {
-        axios.post(`/devices/wink/${ip}`)
+        axios.post(`/api/devices/wink/${ip}`)
             .then((res) => {
                 if (res.status !== 200) {
                     console.error(res.data);
