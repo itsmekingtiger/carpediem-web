@@ -1,6 +1,6 @@
 
 import React, { useState, Fragment, useEffect, useCallback } from 'react'
-import { Input, Button, Grid, Header, Segment, Form, Container, Table, Checkbox } from 'semantic-ui-react'
+import { Input, Button, Grid, Header, Segment, Popup, Container, Table, Checkbox, List } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import './Login.css'
 import DeviceTableRow from './DeviceTableRow.js';
@@ -259,12 +259,24 @@ function Dashboard() {
                     <Container textAlign='left'>
                         {/* <Container style={{ marginTop: 100, marginBottom: 100 }}> */}
 
-                        <Header as='h1'>설정</Header>
-                        <Input
-                            name='home'
-                            placeholder='홈 이름'
-                            value={homename}
-                            onChange={onChangeHome} />
+                        <Header as='h1'>기타설정</Header>
+
+                        <Popup
+                            trigger={<Input
+                                label='홈 이름'
+                                name='home'
+                                placeholder='홈 이름'
+                                value={homename}
+                                onChange={onChangeHome} />}
+                            header='홈 이름'
+                            content={<List>
+                                <List.Item>- 홈 이름은 다음과 같이 설정해 주세요</List.Item>
+                                <List.Item>- 아파트이름.d동.h호</List.Item>
+                                <List.Item>- 만일 한미아파트 101동 109호라면</List.Item>
+                                <List.Item>- hanmi.d101.h109</List.Item>
+                            </List>}
+                            on={['hover', 'focus']}
+                        />
                         <p />
                         <Checkbox
                             // name='push'
@@ -274,7 +286,7 @@ function Dashboard() {
                             label='Push to CarpeDiem' />
                         <p />
                         <Button onClick={onClickConfig} color='teal'>저장</Button>
-                        <Button onClick={onClickShutdown} color='red'>서비스 종료</Button>
+                        <Button onClick={onClickShutdown} color='red'>서비스 종료(재시작)</Button>
                     </Container>
                 </Segment>
             </Grid.Column>
