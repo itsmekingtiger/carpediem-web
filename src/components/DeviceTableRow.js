@@ -66,14 +66,14 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                                 />
                                 <Header>X좌표</Header>
                                 <Input
-                                    defaultValue={location.y}
+                                    defaultValue={location.x}
                                     name={`location.x@` + mac}
                                     placeholder='x좌표'
                                     onChange={onChanged}
                                 />
                                 <Header>Y좌표</Header>
                                 <Input
-                                    defaultValue={location.x}
+                                    defaultValue={location.y}
                                     name={`location.y@` + mac}
                                     placeholder='y좌표'
                                     onChange={onChanged}
