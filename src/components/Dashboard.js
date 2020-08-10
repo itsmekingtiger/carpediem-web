@@ -287,6 +287,9 @@ function Dashboard() {
                         <p />
                         <Button onClick={onClickConfig} color='teal'>저장</Button>
                         <Button onClick={onClickShutdown} color='red'>서비스 종료(재시작)</Button>
+                        <p />
+
+                        {"* 서비스 종료시 10초 후에 새로고침 해주세요."}
                     </Container>
                 </Segment>
             </Grid.Column>
