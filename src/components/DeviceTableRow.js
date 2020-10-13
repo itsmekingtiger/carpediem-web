@@ -86,7 +86,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                                     onChange={onChanged}
                                 />
                                 <Header>서브 라벨</Header>
-                                `,`로 분리하여 입력. {config}개 입력 가능(STM한정).
+                                `,`로 분리하여 입력. {config & 0b0111}개 입력 가능(STM/SDM한정).
                                 <p />
 
                                 <Input
