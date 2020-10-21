@@ -217,7 +217,7 @@ function Dashboard() {
                                     <Table.HeaderCell textAlign='center'>타입</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>MAC</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>IP</Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='center'>현재상태/</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>현재상태/최근통신</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>윙크</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>설정</Table.HeaderCell>
                                 </Table.Row>
@@ -250,7 +250,7 @@ function Dashboard() {
                                     <Table.HeaderCell textAlign='center'>locationId</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>X</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>Y</Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='center'>현재상태/갱신시각</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>현재상태/최근통신</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>타입</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>UID</Table.HeaderCell>
                                 </Table.Row>
