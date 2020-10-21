@@ -6,7 +6,27 @@ import axios from 'axios'
 
 
 function SensorTableRow({ profDeviceInfo, onChanged }) {
-    const { type, location, uid } = profDeviceInfo;
+    const { type, location, uid, "last-update-time": lastUpdateTime, state } = profDeviceInfo;
+
+
+    const getMainState = (type, state) => {
+        let ltu = new Date(lastUpdateTime).getTime();
+        let diff = Math.round((Date.now() - ltu) / 1000) + " sec ago";
+        if (300 > ltu) {
+            diff = "disconnected"
+        }
+
+        switch (enumType(type)) {
+            case "USM":
+                return "재실: " + state.presence.properties.presence + " / " + diff;
+            case "DSM":
+                return "문열림: " + state.door.properties.door + " / " + diff;
+            default:
+                console.error("센서의 대표값을 구할 수 없습니다: 잘못된 센서 타입: ", type)
+                break;
+        }
+    }
+
     return (
         <Fragment>
             <Table.Row>
@@ -21,6 +41,9 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
                 </Table.Cell>
                 <Table.Cell textAlign='center'>
                     <Input name={`location.y@${uid}`} defaultValue={location.y} onChange={onChanged} fluid></Input>
+                </Table.Cell>
+                <Table.Cell textAlign='center'>
+                    {getMainState(type, state)}
                 </Table.Cell>
                 <Table.Cell textAlign='center'>
                     {enumType(type)}

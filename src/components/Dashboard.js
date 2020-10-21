@@ -10,6 +10,7 @@ import axios from 'axios';
 
 function Dashboard() {
     const [deviceRows, setdeviceRows] = useState([])
+    let deviceStatus = [];
     const [sensorRows, setSensorRows] = useState([])
     const [enablePush, setEnablePush] = useState(false)
     const [homename, setHomename] = useState('')
@@ -21,7 +22,14 @@ function Dashboard() {
             .then((res) => {
                 console.log(res.data);
 
-                setdeviceRows(res.data)
+                let deviceSchema = res.data.map((e) => {
+                    let ds = e.DeviceSchema;
+                    ds.state = e.Features;
+                    // console.log(ds);
+                    return ds;
+                })
+
+                setdeviceRows(deviceSchema)
             })
             .catch(err => console.log(err.response));
 
@@ -30,7 +38,13 @@ function Dashboard() {
             .then((res) => {
                 // console.log("센서가져오기", res.data);
 
-                setSensorRows(res.data)
+                let sensorSchema = res.data.map((e) => {
+                    let ss = e.SensorSchema;
+                    ss.state = e.Features;
+                    // console.log(ss);
+                    return ss;
+                })
+                setSensorRows(sensorSchema)
             })
             .catch(err => console.log(err.response));
 
@@ -203,6 +217,7 @@ function Dashboard() {
                                     <Table.HeaderCell textAlign='center'>타입</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>MAC</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>IP</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>갱신시각</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>윙크</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>설정</Table.HeaderCell>
                                 </Table.Row>
@@ -235,6 +250,7 @@ function Dashboard() {
                                     <Table.HeaderCell textAlign='center'>locationId</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>X</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>Y</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>갱신시각</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>타입</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>UID</Table.HeaderCell>
                                 </Table.Row>

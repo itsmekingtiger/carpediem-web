@@ -15,7 +15,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
     //     label: profDeviceInfo.lable,
     // })
 
-    const { location, nickname, type, mac, ip, label, config } = profDeviceInfo;
+    const { location, nickname, type, mac, ip, label, config, "last-update-time": lastUpdateTime, state } = profDeviceInfo;
 
 
     const onClickWink = (e) => {
@@ -25,6 +25,36 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                     console.error(res.data);
                 }
             })
+    }
+
+    const getMainState = (type, state) => {
+        let ltu = new Date(lastUpdateTime).getTime();
+        let diff = Math.round((Date.now() - ltu) / 1000) + " sec ago";
+        if (300 > ltu) {
+            diff = "disconnected"
+        }
+
+        switch (type) {
+            case "ACM":
+                return "전원:" + state.airconditioner.properties.switch + " / " + diff;
+            case "AQM":
+                return "온도:" + state.airquality.properties.temperature + " / " + diff;
+            case "BCM":
+                return "전원:" + state.boiler.properties.switch + " / " + diff;
+            case "CCM":
+                return "전원:" + state.smartswitch.properties.switch + " / " + diff;
+            case "LCM":
+                return "전원:" + state["dimming-switch"].properties.switch + " / " + diff;
+            case "STM":
+                return "0번 전원:" + state.switch0.properties.switch + " / " + diff;
+            case "SDM":
+                return "0번 전원:" + state["dimming-switch0"].properties.switch + " / " + diff;
+            case "PMM":
+                return "0번 전원:" + state.meter.properties.power + " / " + diff;
+            default:
+                console.error("장치의 대표값을 구할 수 없습니다: 잘못된 장치 타입: ", type)
+                break;
+        }
     }
 
 
@@ -41,6 +71,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                 <Table.Cell textAlign='center'>{type}</Table.Cell>
                 <Table.Cell textAlign='center'>{mac}</Table.Cell>
                 <Table.Cell textAlign='center'>{ip}</Table.Cell>
+                <Table.Cell textAlign='center'>{getMainState(type, state)}</Table.Cell>
                 <Table.Cell textAlign='center'>
                     <Button color='teal' onClick={onClickWink}>Wink</Button>
                 </Table.Cell>
