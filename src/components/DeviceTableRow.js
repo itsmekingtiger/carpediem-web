@@ -27,6 +27,18 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
             })
     }
 
+    const onClickDelete = (e) => {
+        axios.delete(`/api/device/${mac}`)
+            .then((res) => {
+                if (res.status !== 200) {
+                    alert("오류:" + res.data);
+                    console.error(res.data);
+                } else {
+                    alert("삭제됨");
+                }
+            })
+    }
+
     const getMainState = (type, state) => {
         let ltu = new Date(lastUpdateTime).getTime();
         let diff = Math.round((Date.now() - ltu) / 1000) + " sec ago";
@@ -34,23 +46,76 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
             diff = "disconnected"
         }
 
+        let mainStateStr = ""
         switch (type) {
             case "ACM":
-                return "전원:" + state.airconditioner.properties.switch + " / " + diff;
+                switch (state.airconditioner.properties.switch) {
+                    case 0:
+                        mainStateStr = "꺼짐"
+                        break;
+                    case 1:
+                        mainStateStr = "켜짐"
+                        break;
+                    default:
+                        mainStateStr = `알수없음(${state.airconditioner.properties.switch})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
+
             case "AQM":
-                return "온도:" + state.airquality.properties.temperature + " / " + diff;
+                return state.airquality.properties.temperature + "°C / " + diff;
+
             case "BCM":
-                return "전원:" + state.boiler.properties.switch + " / " + diff;
+                switch (state.boiler.properties.switch) {
+                    case 0:
+                        mainStateStr = "꺼짐"
+                        break;
+                    case 1:
+                        mainStateStr = "켜짐"
+                        break;
+                    default:
+                        mainStateStr = `알수없음(${state.boiler.properties.switch})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
+
             case "CCM":
-                return "전원:" + state.smartswitch.properties.switch + " / " + diff;
+                switch (state.smartswitch.properties.switch) {
+                    case 0:
+                        mainStateStr = "꺼짐"
+                        break;
+                    case 1:
+                        mainStateStr = "켜짐"
+                        break;
+                    default:
+                        mainStateStr = `알수없음(${state.smartswitch.properties.switch})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
+
             case "LCM":
-                return "전원:" + state["dimming-switch"].properties.switch + " / " + diff;
+                return state["dimming-switch"].properties.switch + "% / " + diff;
+
             case "STM":
-                return "0번 전원:" + state.switch0.properties.switch + " / " + diff;
+                switch (state.switch0.properties.switch) {
+                    case 0:
+                        mainStateStr = "꺼짐"
+                        break;
+                    case 1:
+                        mainStateStr = "켜짐"
+                        break;
+                    default:
+                        mainStateStr = `알수없음(${state.switch0.properties.switch})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
+
             case "SDM":
-                return "0번 전원:" + state["dimming-switch0"].properties.switch + " / " + diff;
+                return `밝기: ${state["dimming-switch0"].properties.switch}%` + " / " + diff;
+
             case "PMM":
-                return "0번 전원:" + state.meter.properties.power + " / " + diff;
+                return `${state.meter.properties.power}W / ${diff}`;
+
             default:
                 console.error("장치의 대표값을 구할 수 없습니다: 잘못된 장치 타입: ", type)
                 break;
@@ -110,6 +175,8 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                                     onChange={onChanged}
                                 />
                                 <Header>장치 이름</Header>
+                                CCM에 연결된 가전기기 이름, 혹은 PMM의 구분(전열/에어컨)
+                                <p />
                                 <Input
                                     defaultValue={nickname}
                                     name={`nickname@` + mac}
@@ -129,7 +196,10 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                             </Modal.Description>
                         </Modal.Content>
                     </Modal>
-                </Table.Cell >
+                </Table.Cell>
+                <Table.Cell textAlign='center'>
+                    <Button color='red' onClick={onClickDelete}>삭제</Button>
+                </Table.Cell>
             </Table.Row>
         </Fragment>
 

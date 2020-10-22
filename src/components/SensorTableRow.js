@@ -16,15 +16,59 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
             diff = "disconnected"
         }
 
+        let mainStateStr = ""
         switch (enumType(type)) {
             case "USM":
-                return "재실: " + state.presence.properties.presence + " / " + diff;
+                switch (state.presence.properties.presence) {
+                    case 1:
+                    case 3:
+                        mainStateStr = "부재"
+                        break;
+
+                    case 2:
+                    case 4:
+                        mainStateStr = "재실"
+                        break;
+
+                    default:
+                        mainStateStr = `알수없음(${state.presence.properties.presence})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
             case "DSM":
-                return "문열림: " + state.door.properties.door + " / " + diff;
+                switch (state.door.properties.door) {
+                    case 1:
+                    case 3:
+                        mainStateStr = "닫힘"
+                        break;
+
+                    case 2:
+                    case 4:
+                        mainStateStr = "열림"
+                        break;
+
+                    default:
+                        mainStateStr = `알수없음(${state.door.properties.door})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
             default:
                 console.error("센서의 대표값을 구할 수 없습니다: 잘못된 센서 타입: ", type)
                 break;
         }
+    }
+
+
+    const onClickDelete = (e) => {
+        axios.delete(`/api/sensor/${uid}`)
+            .then((res) => {
+                if (res.status !== 200) {
+                    alert("오류:" + res.data);
+                    console.error(res.data);
+                } else {
+                    alert("삭제됨");
+                }
+            })
     }
 
     return (
@@ -50,6 +94,9 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
                 </Table.Cell>
                 <Table.Cell textAlign='center'>
                     {uid}
+                </Table.Cell>
+                <Table.Cell textAlign='center'>
+                    <Button color='red' onClick={onClickDelete}>삭제</Button>
                 </Table.Cell>
             </Table.Row>
         </Fragment>

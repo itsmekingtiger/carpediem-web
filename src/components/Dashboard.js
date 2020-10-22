@@ -220,6 +220,7 @@ function Dashboard() {
                                     <Table.HeaderCell textAlign='center'>현재상태/최근통신</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>윙크</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>설정</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>삭제</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
@@ -246,13 +247,14 @@ function Dashboard() {
                         <Table selectable compact>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell textAlign='center'>room</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>장치위치</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>locationId</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>X</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>Y</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>현재상태/최근통신</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>타입</Table.HeaderCell>
                                     <Table.HeaderCell textAlign='center'>UID</Table.HeaderCell>
+                                    <Table.HeaderCell textAlign='center'>삭제</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
@@ -288,8 +290,8 @@ function Dashboard() {
                             content={<List>
                                 <List.Item>- 홈 이름은 다음과 같이 설정해 주세요</List.Item>
                                 <List.Item>- 아파트이름.d동.h호</List.Item>
-                                <List.Item>- 만일 한미아파트 101동 109호라면</List.Item>
-                                <List.Item>- hanmi.d101.h109</List.Item>
+                                <List.Item>- 만일 신도아파트 101동 109호라면</List.Item>
+                                <List.Item>- shido.d101.h109</List.Item>
                             </List>}
                             on={['hover', 'focus']}
                         />
