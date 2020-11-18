@@ -168,14 +168,17 @@ function Dashboard() {
     const onClickDeviceSave = () => {
         console.log(JSON.stringify(deviceRows));
 
-
-        axios.put('/api/devices', JSON.stringify(deviceRows))
+        axios.put('/api/devices', JSON.stringify(deviceRows)).catch((err) => {
+            alert(`저장 실패: ${err}`);
+        })
     }
 
     const onClickSensorSave = () => {
         console.log(sensorRows);
 
-        axios.put('/api/sensors', sensorRows)
+        axios.put('/api/sensors', sensorRows).catch((err) => {
+            alert(`저장 실패: ${err}`);
+        })
     }
 
     const onChangeHome = (e) => {
@@ -187,14 +190,9 @@ function Dashboard() {
         setEnablePush(!enablePush)
     }
     const onClickConfig = () => {
-        axios.put('/api/service/set', { push: enablePush, home: homename })
-            .then((res) => {
-                console.log(res.data);
-
-                if (res.status !== 200) {
-                    console.error(res.data);
-                }
-            })
+        axios.put('/api/service/set', { push: enablePush, home: homename }).catch((err) => {
+            alert(`저장 실패: ${err}`);
+        })
     }
     const onClickShutdown = () => {
         axios.post('/api/service/shutdown', { push: enablePush, home: homename })
