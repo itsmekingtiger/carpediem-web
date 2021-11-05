@@ -35,6 +35,7 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
                         break;
                 }
                 return mainStateStr + " / " + diff;
+
             case "DSM":
                 switch (state.door.properties.door) {
                     case 1:
@@ -52,6 +53,25 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
                         break;
                 }
                 return mainStateStr + " / " + diff;
+
+            case "CSM":
+                switch (state.door.properties.door) {
+                    case 0:
+                        mainStateStr = "NoEvent"
+                        break;
+                    case 1:
+                        mainStateStr = "IN"
+                        break;
+                    case 2:
+                        mainStateStr = "OUT"
+                        break;
+
+                    default:
+                        mainStateStr = `알수없음(${state.door.properties.door})`
+                        break;
+                }
+                return mainStateStr + " / " + diff;
+
             default:
                 console.error("센서의 대표값을 구할 수 없습니다: 잘못된 센서 타입: ", type)
                 break;
@@ -115,6 +135,8 @@ function enumType(typenum) {
             return "TSM"
         case 7:
             return "USM"
+        case 9:
+            return "CSM"
         case 99:
             return "ZBC"
         default:
