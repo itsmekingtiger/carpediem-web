@@ -10,6 +10,7 @@ import axios from 'axios';
 
 function Dashboard() {
     const [deviceRows, setdeviceRows] = useState([])
+    const [gitInfo, setGitInfo] = useState("")
     let deviceStatus = [];
     const [sensorRows, setSensorRows] = useState([])
     const [enablePush, setEnablePush] = useState(false)
@@ -66,6 +67,8 @@ function Dashboard() {
             .catch((err) => {
                 console.log(err);
             })
+
+        getGitLog();
 
         return () => {
         }
@@ -198,6 +201,10 @@ function Dashboard() {
         axios.post('/api/service/shutdown', { push: enablePush, home: homename })
     }
 
+    const getGitLog = async () => {
+        const resp = await axios.get('/gitlog.txt');
+        setGitInfo(resp.data);
+    }
 
     return (
 
@@ -306,6 +313,8 @@ function Dashboard() {
                         <p />
 
                         {"* 서비스 종료시 10초 후에 새로고침 해주세요."}
+
+                        <pre>{gitInfo}</pre>
                     </Container>
                 </Segment>
             </Grid.Column>
