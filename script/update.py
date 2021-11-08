@@ -5,11 +5,20 @@ from typing import Final
 from urllib import request
 
 # constants
-base_url: Final = "https://github.com/itsmekingtiger/carpediem-web/releases"
-lastest_path: Final = "latest"
-zip_name: Final = "build.tar.gz"
-download_path: Final = path.join("/tmp", zip_name)
+""" About file and dirs
+
+"""
+file_name: Final = "/build.tar.gz"
+download_path: Final = path.join("/tmp", file_name)
 install_dir: Final = "/urs/local/bin"
+
+
+""" About URLs
+e.g,
+    lastest: https://github.com/itsmekingtiger/carpediem-web/releases/latest/download/build.tar.gz
+    tagged: https://github.com/itsmekingtiger/carpediem-web/releases/download/0.0.1/build.tar.gz
+"""
+base_url: Final = "https://github.com/itsmekingtiger/carpediem-web/releases"
 
 
 class color:
@@ -24,11 +33,11 @@ class color:
     UNDERLINE = "\033[4m"
 
 
-def assamble_download_url(base: str, tag: str = None):
+def assamble_download_url(tag: str = None):
     if tag:
-        return path.join(base, "tags", sys.argv[1])
+        return base_url + f"/download/{tag}" + file_name
     else:
-        return path.join(base, lastest_path)
+        return base_url + "/latest/download" + file_name
 
 
 def delete_file(target: str):
@@ -43,8 +52,11 @@ def delete_file(target: str):
 
 if __name__ == "__main__":
     # assamble download url
-    tag: str = None if len(sys.argv) == 1 else sys.argv[1]
-    download_url = assamble_download_url(base_url, tag)
+    download_url = None
+    if len(sys.argv) == 1:
+        download_url = base_url + "/latest/download" + file_name
+    else:
+        download_url = base_url + f"/download/{sys.argv[1]}" + file_name
 
     try:
         # downlaod file
