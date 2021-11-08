@@ -1,16 +1,17 @@
+import os
 import sys
 import zipfile
-from os import path, remove
-from typing import Final
+import tarfile
+from os import path, remove, rmdir
 from urllib import request
 
 # constants
 """ About file and dirs
 
 """
-file_name: Final = "/build.tar.gz"
-download_path: Final = path.join("/tmp", file_name)
-install_dir: Final = "/urs/local/bin"
+file_name = "/build.tar.gz"
+download_path = "/tmp" + file_name
+install_dir = "/usr/local/bin"
 
 
 """ About URLs
@@ -18,7 +19,7 @@ e.g,
     lastest: https://github.com/itsmekingtiger/carpediem-web/releases/latest/download/build.tar.gz
     tagged: https://github.com/itsmekingtiger/carpediem-web/releases/download/0.0.1/build.tar.gz
 """
-base_url: Final = "https://github.com/itsmekingtiger/carpediem-web/releases"
+base_url = "https://github.com/itsmekingtiger/carpediem-web/releases"
 
 
 class color:
@@ -33,6 +34,10 @@ class color:
     UNDERLINE = "\033[4m"
 
 
+def get_tag():
+    return None if len(sys.argv) <= 1 else sys.argv[1]
+
+
 def assamble_download_url(tag: str = None):
     if tag:
         return base_url + f"/download/{tag}" + file_name
@@ -40,36 +45,41 @@ def assamble_download_url(tag: str = None):
         return base_url + "/latest/download" + file_name
 
 
-def delete_file(target: str):
-    if path.exists(target):
-        remove(target)
-        print(color.INFO + "old file removed")
+def print_commit_id(target: str):
+    if path.exists(target + "/build/gitlog.txt"):
+        with open(target + "/build/gitlog.txt", "r") as f:
+            print(f"✔ commit id: {f.readline()}")
     else:
-        print(color.WARN + "old file does not exist")
+        print(color.WARN + f"! file not found")
 
 
 ###############################################################################
 
 if __name__ == "__main__":
     # assamble download url
-    download_url = None
-    if len(sys.argv) == 1:
-        download_url = base_url + "/latest/download" + file_name
-    else:
-        download_url = base_url + f"/download/{sys.argv[1]}" + file_name
+
+    tag = get_tag()
+    if tag:
+        print(f"- tag: {tag}")
+
+    download_url = assamble_download_url(tag)
+    print(f"- download url resolved: {download_url}")
 
     try:
         # downlaod file
         _, header = request.urlretrieve(download_url, download_path)
-
-        delete_file(path.join(install_dir, "build"))
+        print(f"✔ download complete, saved at: {download_path}")
 
         # unzip
-        with zipfile.ZipFile(download_path, "r") as zip_file:
-            zip_file.extractall(install_dir)
+        with tarfile.open(download_path) as f:
+            f.extractall(install_dir)
+            print(f"✔ file extracted at: {install_dir}")
+
+        print_commit_id(install_dir)
+
+        print(color.OK + f"🎉 done")
+        print(color.ENDC)
 
     except Exception as e:
-        print(color.FAIL + f"failed to update website: {e}")
-        exit(-1)
-
-    print(color.OK + f"web site update from: {download_url}")
+        print(color.FAIL + f"! failed to update website: {e}")
+        print(color.ENDC + e.with_traceback())
