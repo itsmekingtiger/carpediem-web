@@ -55,7 +55,7 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
                 return mainStateStr + " / " + diff;
 
             case "CSM":
-                switch (state.door.properties.door) {
+                switch (state.counterSensor.properties.occupancyCount) {
                     case 0:
                         mainStateStr = "NoEvent"
                         break;
@@ -67,7 +67,7 @@ function SensorTableRow({ profDeviceInfo, onChanged }) {
                         break;
 
                     default:
-                        mainStateStr = `알수없음(${state.door.properties.door})`
+                        mainStateStr = `알수없음(${state.counterSensor.properties.occupancyCount})`
                         break;
                 }
                 return mainStateStr + " / " + diff;
