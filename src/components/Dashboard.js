@@ -75,48 +75,73 @@ function Dashboard() {
     }, [])
 
 
-
+    // e.target.name은 `some.topics@<device mac address>` 같은 형태로 전달된다.
+    //  e.g.
+    //    label@a8:2b:d6:29:94:ae
+    //    location.y@a8:2b:d6:29:94:ae
     const onChangedDevice = (e) => {
-        var { name, className, value } = e.target
-        const key = name.split('@')
-        const nested = key[0].split('.')
+        const { name, className, value } = e.target;
+
+        const name_parts = name.split('@');
+        const topics = name_parts[0].split('.');
+
+        const mac = name_parts[1];
+        const primaryTopic = topics[0];
+        const secondaryTopic = topics[1];
+
         setdeviceRows(
             deviceRows.map((dev) => {
-                if (dev.mac === key[1]) {
-                    if (key[0] === 'label') {
-                        dev = {
-                            ...dev,
-                            [key[0]]: value.split(',')
-                        }
-                    } else {
-                        // 로케이션 처리
-                        console.log("dev", dev["location"]);
-                        if (nested.length === 2) {
-                            switch (nested[1]) {
-                                case "x":
-                                case "y":
-                                    value = Number(value)
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                if (dev.mac === mac) {
+                    switch (primaryTopic) {
+                        // 1깊이 토픽 기본 처리
+                        case 'nickname':
+                        case 'label':
                             dev = {
                                 ...dev,
-                                [nested[0]]: {
-                                    ...dev.location,
-                                    [nested[1]]: value
+                                [primaryTopic]: value.split(',')
+                            }
+                            break;
+
+
+                        // 2깊이 토픽 기본 처리
+                        case "enerynet-label":
+                            dev = {
+                                ...dev,
+                                [primaryTopic]: {
+                                    ...dev["enernet-label"],
+                                    [secondaryTopic]: value
                                 }
                             }
-                        } else {
-                            dev = {
-                                ...dev,
-                                [key[0]]: value
+                            break;
+
+                        // 특수 처리가 필요한 토픽
+                        case 'location':
+                            if (secondaryTopic === undefined) {
+                                dev = {
+                                    ...dev,
+                                    [primaryTopic]: value
+                                }
+                            } else {
+                                // 좌표의 경우 숫자로 변환
+                                if (['x', 'y'].includes(secondaryTopic)) {
+                                    value = Number(value)
+                                }
+
+                                dev = {
+                                    ...dev,
+                                    [primaryTopic]: {
+                                        ...dev.location,
+                                        [secondaryTopic]: value
+                                    }
+                                }
                             }
-                        }
+                            break;
+
+                        default:
+                            break;
                     }
                 }
-                return dev
+                return dev;
             })
         )
     }
