@@ -6,16 +6,19 @@ import axios from 'axios'
 
 
 function DeviceTableRow({ profDeviceInfo, onChanged }) {
-    // const [deviceInfo, setdeviceInfo] = useState({
-    //     room: profDeviceInfo.room,
-    //     nickname: profDeviceInfo.nickname,
-    //     type: profDeviceInfo.type,
-    //     mac: profDeviceInfo.mac,
-    //     ip: profDeviceInfo.ip,
-    //     label: profDeviceInfo.lable,
-    // })
 
-    const { location, nickname, type, mac, ip, label, config, "last-update-time": lastUpdateTime, state } = profDeviceInfo;
+    const {
+        location,
+        nickname,
+        type,
+        mac,
+        ip,
+        label,
+        config,
+        "enernet-label": enernetLabel,
+        "last-update-time": lastUpdateTime,
+        state,
+    } = profDeviceInfo;
 
 
     const onClickWink = (e) => {
@@ -122,6 +125,61 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
         }
     }
 
+    const drawConnecttedDevice = () => {
+        if (type === "PMM" || type === "CCM") {
+            return <>
+                <Header>장치 이름</Header>
+                CCM에 연결된 가전기기 이름, 혹은 PMM의 구분(전열/에어컨)
+                <p />
+                <Input
+                    defaultValue={nickname}
+                    name={`nickname@` + mac}
+                    placeholder='이름'
+                    onChange={onChanged}
+                />
+            </>
+        }
+    }
+
+    const drawSubLable = () => {
+        if (type === "STM" || type === "SDM") {
+            return <>
+                <Header>서브 라벨</Header>
+                `,`로 분리하여 입력. {config & 0b0111}개 입력 가능(STM/SDM한정).
+                <p />
+
+                <Input
+                    defaultValue={label}
+                    name={`label@` + mac}
+                    placeholder='라벨'
+                    onChange={onChanged}
+                />
+            </>
+        }
+    }
+
+    // TODO: onchanged
+    const drawEnnLables = () => {
+        if (type === "ENN") {
+            enernetLabel.map()
+            let entries = []
+
+            for (const [key, value] of enernetLabel.entries()) {
+                let params = {
+                    mac: mac,
+                    subId: key,
+                    label: value,
+                    onchanged: onChanged,
+                }
+                entries.append(< EnerenyLableEntry params={params}> </EnerenyLableEntry >);
+            }
+
+            return <>
+                <Header>에너넷 서브 디바이스</Header>
+                {entries}
+            </>
+        }
+    }
 
 
     return (
@@ -174,25 +232,12 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                                     placeholder='y좌표'
                                     onChange={onChanged}
                                 />
-                                <Header>장치 이름</Header>
-                                CCM에 연결된 가전기기 이름, 혹은 PMM의 구분(전열/에어컨)
-                                <p />
-                                <Input
-                                    defaultValue={nickname}
-                                    name={`nickname@` + mac}
-                                    placeholder='이름'
-                                    onChange={onChanged}
-                                />
-                                <Header>서브 라벨</Header>
-                                `,`로 분리하여 입력. {config & 0b0111}개 입력 가능(STM/SDM한정).
-                                <p />
 
-                                <Input
-                                    defaultValue={label}
-                                    name={`label@` + mac}
-                                    placeholder='라벨'
-                                    onChange={onChanged}
-                                />
+                                {drawConnecttedDevice()}
+
+                                {drawSubLable()}
+
+                                {drawEnnLables()}
                             </Modal.Description>
                         </Modal.Content>
                     </Modal>
@@ -205,6 +250,24 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
 
 
 
+    )
+}
+
+function EnerenyLableEntry(params) {
+    const { mac, subId, label, onChanged } = params;
+    return (
+        <Table.Row>
+            <Table.Cell textAlign='center'>
+                {mac}
+            </Table.Cell>
+            <Table.Cell textAlign='center'>
+                <Input
+                    defaultValue={label}
+                    onChange={onChanged}
+                    name={`enernet-label.${subId}@${mac}`}
+                />
+            </Table.Cell>
+        </Table.Row>
     )
 }
 
