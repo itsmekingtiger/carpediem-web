@@ -119,6 +119,9 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
             case "PMM":
                 return `${state.meter.properties.power}W / ${diff}`;
 
+            case "ENN":
+                return `${Object.keys(state.meters.properties).length}개 등록 / ${diff}`;
+
             default:
                 console.error("장치의 대표값을 구할 수 없습니다: 잘못된 장치 타입: ", type)
                 break;
