@@ -128,6 +128,42 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
         }
     }
 
+    const drawLocation = () => {
+        if (type !== "ENN") {
+            return <>
+                <Header>장치위치</Header>
+                <Input
+                    defaultValue={location.room}
+                    name={`location.room@` + mac}
+                    placeholder='위치'
+                    onChange={onChanged}
+                />
+                <Header>locationID</Header>
+                <Input
+                    defaultValue={location.locationId}
+                    name={`location.locationId@` + mac}
+                    placeholder='location id'
+                    onChange={onChanged}
+                />
+                <Header>X좌표</Header>
+                <Input
+                    defaultValue={location.x}
+                    name={`location.x@` + mac}
+                    placeholder='x좌표'
+                    onChange={onChanged}
+                />
+                <Header>Y좌표</Header>
+                <Input
+                    defaultValue={location.y}
+                    name={`location.y@` + mac}
+                    placeholder='y좌표'
+                    onChange={onChanged}
+                />
+            </>
+        }
+    }
+
+
     const drawConnecttedDevice = () => {
         if (type === "PMM" || type === "CCM") {
             return <>
@@ -161,26 +197,9 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
         }
     }
 
-    // TODO: onchanged
     const drawEnnLables = () => {
         if (type === "ENN") {
-            enernetLabel.map()
-            let entries = []
-
-            for (const [key, value] of enernetLabel.entries()) {
-                let params = {
-                    mac: mac,
-                    subId: key,
-                    label: value,
-                    onchanged: onChanged,
-                }
-                entries.append(< EnerenyLableEntry params={params}> </EnerenyLableEntry >);
-            }
-
-            return <>
-                <Header>에너넷 서브 디바이스</Header>
-                {entries}
-            </>
+            return <>api를 직접 사용하여 수동으로 등록 필요</>
         }
     }
 
@@ -207,34 +226,7 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                         <Modal.Header>{location.room} - {nickname}({ip})의 설정</Modal.Header>
                         <Modal.Content image>
                             <Modal.Description>
-                                <Header>장치위치</Header>
-                                <Input
-                                    defaultValue={location.room}
-                                    name={`location.room@` + mac}
-                                    placeholder='위치'
-                                    onChange={onChanged}
-                                />
-                                <Header>locationID</Header>
-                                <Input
-                                    defaultValue={location.locationId}
-                                    name={`location.locationId@` + mac}
-                                    placeholder='location id'
-                                    onChange={onChanged}
-                                />
-                                <Header>X좌표</Header>
-                                <Input
-                                    defaultValue={location.x}
-                                    name={`location.x@` + mac}
-                                    placeholder='x좌표'
-                                    onChange={onChanged}
-                                />
-                                <Header>Y좌표</Header>
-                                <Input
-                                    defaultValue={location.y}
-                                    name={`location.y@` + mac}
-                                    placeholder='y좌표'
-                                    onChange={onChanged}
-                                />
+                                {drawLocation()}
 
                                 {drawConnecttedDevice()}
 
@@ -250,28 +242,8 @@ function DeviceTableRow({ profDeviceInfo, onChanged }) {
                 </Table.Cell>
             </Table.Row>
         </Fragment>
-
-
-
-    )
+    );
 }
 
-function EnerenyLableEntry(params) {
-    const { mac, subId, label, onChanged } = params;
-    return (
-        <Table.Row>
-            <Table.Cell textAlign='center'>
-                {mac}
-            </Table.Cell>
-            <Table.Cell textAlign='center'>
-                <Input
-                    defaultValue={label}
-                    onChange={onChanged}
-                    name={`enernet-label.${subId}@${mac}`}
-                />
-            </Table.Cell>
-        </Table.Row>
-    )
-}
 
 export default React.memo(DeviceTableRow);
